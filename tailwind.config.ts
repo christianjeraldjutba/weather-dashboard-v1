@@ -26,7 +26,8 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					foreground: 'hsl(var(--primary-foreground))',
+					glow: 'hsl(var(--primary-glow))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -51,6 +52,14 @@ export default {
 				card: {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
+				},
+				weather: {
+					sunny: 'hsl(var(--sunny))',
+					'sunny-glow': 'hsl(var(--sunny-glow))',
+					cloudy: 'hsl(var(--cloudy))',
+					rainy: 'hsl(var(--rainy))',
+					stormy: 'hsl(var(--stormy))',
+					snowy: 'hsl(var(--snowy))'
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
@@ -84,11 +93,54 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'weather-bounce': {
+					'0%, 100%': {
+						transform: 'translateY(0)'
+					},
+					'50%': {
+						transform: 'translateY(-10px)'
+					}
+				},
+				'weather-pulse': {
+					'0%, 100%': {
+						opacity: '1'
+					},
+					'50%': {
+						opacity: '0.7'
+					}
+				},
+				'weather-spin': {
+					'0%': {
+						transform: 'rotate(0deg)'
+					},
+					'100%': {
+						transform: 'rotate(360deg)'
+					}
+				},
+				'forecast-slide': {
+					'0%': {
+						transform: 'translateX(20px)',
+						opacity: '0'
+					},
+					'100%': {
+						transform: 'translateX(0)',
+						opacity: '1'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'weather-bounce': 'weather-bounce 2s ease-in-out infinite',
+				'weather-pulse': 'weather-pulse 2s ease-in-out infinite',
+				'weather-spin': 'weather-spin 1s linear infinite',
+				'forecast-slide': 'forecast-slide 0.5s ease-out forwards'
+			},
+			backgroundImage: {
+				'weather-gradient': 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))',
+				'sunny-gradient': 'linear-gradient(135deg, hsl(var(--sunny)), hsl(var(--sunny-glow)))',
+				'glass-gradient': 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))'
 			}
 		}
 	},

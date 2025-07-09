@@ -1,11 +1,18 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { WeatherDashboard } from '@/components/WeatherDashboard';
+import weatherBg from '@/assets/weather-bg.jpg';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div 
+      className="min-h-screen bg-cover bg-center bg-no-repeat relative"
+      style={{ backgroundImage: `url(${weatherBg})` }}
+    >
+      {/* Background overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-accent/20" />
+      
+      {/* Content */}
+      <div className="relative z-10">
+        <WeatherDashboard />
       </div>
     </div>
   );

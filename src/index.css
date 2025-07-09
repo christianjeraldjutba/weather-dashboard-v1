@@ -2,39 +2,55 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Weather Dashboard Design System - Professional & Modern */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Base colors - Sky-inspired palette */
+    --background: 220 25% 95%;
+    --foreground: 220 15% 15%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Cards with glassmorphism effect */
+    --card: 220 25% 98%;
+    --card-foreground: 220 15% 15%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Popovers */
+    --popover: 220 25% 98%;
+    --popover-foreground: 220 15% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Deep sky blue */
+    --primary: 220 85% 55%;
+    --primary-foreground: 220 15% 98%;
+    --primary-glow: 220 85% 70%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Light sky */
+    --secondary: 220 30% 92%;
+    --secondary-foreground: 220 20% 25%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted tones */
+    --muted: 220 20% 90%;
+    --muted-foreground: 220 10% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent - Bright sky */
+    --accent: 200 85% 60%;
+    --accent-foreground: 220 15% 15%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Weather condition colors */
+    --sunny: 45 95% 60%;
+    --sunny-glow: 45 95% 75%;
+    --cloudy: 220 15% 70%;
+    --rainy: 210 75% 50%;
+    --stormy: 250 40% 35%;
+    --snowy: 200 20% 85%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Alerts */
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 220 15% 98%;
+
+    /* Borders and inputs */
+    --border: 220 20% 85%;
+    --input: 220 20% 88%;
+    --ring: 220 85% 55%;
 
     --radius: 0.5rem;
 
@@ -56,33 +72,51 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark mode - Night sky theme */
+    --background: 220 25% 8%;
+    --foreground: 220 15% 90%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    /* Dark glassmorphism cards */
+    --card: 220 20% 12%;
+    --card-foreground: 220 15% 90%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    /* Dark popovers */
+    --popover: 220 20% 12%;
+    --popover-foreground: 220 15% 90%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Primary - Bright sky blue for dark mode */
+    --primary: 200 85% 65%;
+    --primary-foreground: 220 20% 8%;
+    --primary-glow: 200 85% 80%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    /* Secondary - Dark sky */
+    --secondary: 220 20% 15%;
+    --secondary-foreground: 220 15% 85%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    /* Dark muted tones */
+    --muted: 220 15% 18%;
+    --muted-foreground: 220 10% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    /* Dark accent */
+    --accent: 200 85% 65%;
+    --accent-foreground: 220 20% 8%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    /* Weather condition colors - dark mode variants */
+    --sunny: 45 85% 65%;
+    --sunny-glow: 45 85% 80%;
+    --cloudy: 220 15% 50%;
+    --rainy: 210 65% 55%;
+    --stormy: 250 30% 45%;
+    --snowy: 200 15% 75%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    /* Dark alerts */
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 220 15% 90%;
+
+    /* Dark borders and inputs */
+    --border: 220 20% 20%;
+    --input: 220 20% 18%;
+    --ring: 200 85% 65%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -100,6 +134,66 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    background-image: linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--accent) / 0.05));
+    min-height: 100vh;
+  }
+
+  /* Glass morphism utilities */
+  .glass {
+    @apply backdrop-blur-xl bg-white/10 border border-white/20;
+  }
+
+  .glass-card {
+    @apply backdrop-blur-xl bg-white/20 border border-white/30 shadow-xl;
+  }
+
+  /* Weather animations */
+  .weather-fade-in {
+    animation: weather-fade-in 0.6s ease-out forwards;
+  }
+
+  .weather-slide-up {
+    animation: weather-slide-up 0.5s ease-out forwards;
+  }
+
+  /* Custom scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-primary/30 rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/50;
+  }
+}
+
+@keyframes weather-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes weather-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
