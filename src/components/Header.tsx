@@ -24,13 +24,16 @@ export const Header = ({
   onThemeToggle
 }: HeaderProps) => {
   return (
-    <header className="glass-card border-white/30 p-4 mb-8">
+    <header className="glass-card border-white/30 p-6 mb-8 rounded-2xl">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <Cloud className="h-8 w-8 text-primary animate-weather-pulse" />
-            <h1 className="text-2xl font-bold bg-weather-gradient bg-clip-text text-transparent">
-              WeatherDash
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <Cloud className="h-10 w-10 text-primary animate-weather-pulse" />
+              <div className="absolute inset-0 h-10 w-10 text-primary-glow animate-weather-pulse opacity-30 blur-sm" />
+            </div>
+            <h1 className="text-3xl font-bold bg-premium-gradient bg-clip-text text-transparent">
+              WeatherDash Pro
             </h1>
           </div>
         </div>

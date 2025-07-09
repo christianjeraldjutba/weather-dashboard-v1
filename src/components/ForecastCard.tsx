@@ -34,36 +34,43 @@ export const ForecastCard = ({ forecast, unit }: ForecastCardProps) => {
   };
 
   return (
-    <Card className="glass-card border-white/30 p-6">
-      <h3 className="font-semibold mb-6 text-lg">5-Day Forecast</h3>
-      <div className="space-y-4">
+    <Card className="glass-card border-white/30 p-8 rounded-3xl">
+      <h3 className="font-bold mb-8 text-2xl bg-premium-gradient bg-clip-text text-transparent">
+        5-Day Forecast
+      </h3>
+      <div className="space-y-6">
         {forecast.map((day, index) => (
           <div 
             key={day.date}
-            className="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors animate-forecast-slide"
+            className="flex items-center justify-between p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 animate-forecast-slide group cursor-pointer border border-white/10 hover:border-white/20"
             style={{ animationDelay: `${index * 0.1}s` }}
           >
-            <div className="flex items-center gap-4 flex-1">
-              <div className="w-16 text-sm font-medium">
+            <div className="flex items-center gap-6 flex-1">
+              <div className="w-20 text-sm font-bold text-primary">
                 {formatDate(day.date)}
               </div>
-              <WeatherIcon icon={day.day.icon} size={32} />
+              <div className="relative group-hover:scale-110 transition-transform duration-300">
+                <WeatherIcon icon={day.day.icon} size={40} />
+                <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </div>
               <div className="flex-1">
-                <p className="text-sm font-medium capitalize">
+                <p className="text-base font-semibold capitalize mb-1">
                   {day.day.description}
                 </p>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Droplets className="h-3 w-3" />
-                  <span>{Math.round(day.day.precipitation)}%</span>
+                <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-1">
+                    <Droplets className="h-4 w-4 text-blue-400" />
+                    <span className="font-medium">{Math.round(day.day.precipitation)}%</span>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-right">
-              <span className="text-sm font-medium">
-                {convertTemperature(day.day.maxTemp)}{getTemperatureUnit()}
+            <div className="flex flex-col items-end gap-1">
+              <span className="text-lg font-bold bg-warm-gradient bg-clip-text text-transparent">
+                {convertTemperature(day.day.maxTemp)}°
               </span>
-              <span className="text-sm text-muted-foreground">
-                {convertTemperature(day.day.minTemp)}{getTemperatureUnit()}
+              <span className="text-sm text-muted-foreground font-medium">
+                {convertTemperature(day.day.minTemp)}°
               </span>
             </div>
           </div>

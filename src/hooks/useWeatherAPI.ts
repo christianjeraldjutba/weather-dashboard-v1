@@ -4,99 +4,39 @@ import { WeatherData, SearchResult } from '@/types/weather';
 // OpenWeatherMap API configuration
 const BASE_URL = 'https://api.openweathermap.org/data/2.5';
 const GEO_URL = 'https://api.openweathermap.org/geo/1.0';
+const API_KEY = 'e8ab32fc68258a079b72b1bbd8f588f';
 
-// Demo data for when no API key is available
-const DEMO_WEATHER_DATA = {
-  location: {
-    name: 'London',
-    country: 'GB',
-    lat: 51.5074,
-    lon: -0.1278,
-  },
-  current: {
-    temperature: 18,
-    feelsLike: 20,
-    condition: 'Clouds',
-    description: 'partly cloudy',
-    humidity: 65,
-    windSpeed: 15,
-    visibility: 10,
-    pressure: 1013,
-    uvIndex: 3,
-    icon: '02d',
-  },
-  forecast: [
-    {
-      date: new Date().toISOString().split('T')[0],
-      day: {
-        maxTemp: 22,
-        minTemp: 15,
-        condition: 'Clouds',
-        description: 'partly cloudy',
-        humidity: 60,
-        windSpeed: 12,
-        icon: '02d',
-        precipitation: 20,
-      }
-    },
-    {
-      date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
-      day: {
-        maxTemp: 25,
-        minTemp: 17,
-        condition: 'Clear',
-        description: 'clear sky',
-        humidity: 55,
-        windSpeed: 8,
-        icon: '01d',
-        precipitation: 5,
-      }
-    },
-    {
-      date: new Date(Date.now() + 172800000).toISOString().split('T')[0],
-      day: {
-        maxTemp: 19,
-        minTemp: 12,
-        condition: 'Rain',
-        description: 'light rain',
-        humidity: 80,
-        windSpeed: 20,
-        icon: '10d',
-        precipitation: 75,
-      }
-    },
-    {
-      date: new Date(Date.now() + 259200000).toISOString().split('T')[0],
-      day: {
-        maxTemp: 23,
-        minTemp: 16,
-        condition: 'Clear',
-        description: 'clear sky',
-        humidity: 50,
-        windSpeed: 10,
-        icon: '01d',
-        precipitation: 0,
-      }
-    },
-    {
-      date: new Date(Date.now() + 345600000).toISOString().split('T')[0],
-      day: {
-        maxTemp: 21,
-        minTemp: 14,
-        condition: 'Clouds',
-        description: 'scattered clouds',
-        humidity: 70,
-        windSpeed: 14,
-        icon: '03d',
-        precipitation: 30,
-      }
-    }
-  ],
-  lastUpdated: new Date().toISOString(),
+// Cache for API responses (10 minutes)
+const CACHE_DURATION = 10 * 60 * 1000;
+const cache = new Map();
+
+const getCachedData = (key: string) => {
+  const cached = cache.get(key);
+  if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+    return cached.data;
+  }
+  return null;
 };
 
-const getAPIKey = () => {
-  return localStorage.getItem('openweather-api-key') || '';
+const setCachedData = (key: string, data: any) => {
+  cache.set(key, {
+    data,
+    timestamp: Date.now()
+  });
+};
+
+// Enhanced error messages
+const getErrorMessage = (error: any): string => {
+  if (error.message?.includes('404')) {
+    return 'City not found. Please check spelling and try again.';
+  }
+  if (error.message?.includes('429')) {
+    return 'Too many requests. Please wait a moment and try again.';
+  }
+  if (error.message?.includes('NetworkError') || error.message?.includes('fetch')) {
+    return 'Unable to connect to weather service. Please check your internet connection.';
+  }
+  return 'Something went wrong. Please try again.';
 };
 
 export const useWeatherAPI = () => {
@@ -106,96 +46,59 @@ export const useWeatherAPI = () => {
   const searchCities = useCallback(async (query: string): Promise<SearchResult[]> => {
     if (query.length < 2) return [];
     
-    const apiKey = getAPIKey();
-    if (!apiKey) {
-      // Return demo cities when no API key
-      const demoCities = [
-        { name: 'London', country: 'GB', lat: 51.5074, lon: -0.1278 },
-        { name: 'New York', country: 'US', lat: 40.7128, lon: -74.0060 },
-        { name: 'Tokyo', country: 'JP', lat: 35.6762, lon: 139.6503 },
-        { name: 'Paris', country: 'FR', lat: 48.8566, lon: 2.3522 },
-        { name: 'Sydney', country: 'AU', lat: -33.8688, lon: 151.2093 },
-      ].filter(city => 
-        city.name.toLowerCase().includes(query.toLowerCase()) ||
-        city.country.toLowerCase().includes(query.toLowerCase())
-      );
-      return demoCities;
-    }
+    const cacheKey = `search_${query}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
     
     try {
       setError(null);
       const response = await fetch(
-        `${GEO_URL}/direct?q=${encodeURIComponent(query)}&limit=5&appid=${apiKey}`
+        `${GEO_URL}/direct?q=${encodeURIComponent(query)}&limit=5&appid=${API_KEY}`
       );
       
       if (!response.ok) {
-        throw new Error('Failed to search cities');
+        throw new Error(`HTTP ${response.status}: Failed to search cities`);
       }
       
       const data = await response.json();
-      return data.map((item: any) => ({
+      const results = data.map((item: any) => ({
         name: item.name,
         country: item.country,
+        state: item.state,
         lat: item.lat,
         lon: item.lon,
       }));
+      
+      setCachedData(cacheKey, results);
+      return results;
     } catch (err) {
-      setError('Failed to search cities');
+      const errorMessage = getErrorMessage(err);
+      setError(errorMessage);
       return [];
     }
   }, []);
 
   const getWeatherData = useCallback(async (lat: number, lon: number): Promise<WeatherData | null> => {
-    const apiKey = getAPIKey();
-    
-    // Return demo data if no API key is available
-    if (!apiKey) {
-      setLoading(true);
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setLoading(false);
-      
-      // Customize demo data based on location
-      const customDemoData = { ...DEMO_WEATHER_DATA };
-      
-      // Simple location mapping for demo
-      if (lat === 40.7128) { // New York
-        customDemoData.location = { name: 'New York', country: 'US', lat, lon };
-        customDemoData.current.temperature = 22;
-        customDemoData.current.description = 'clear sky';
-        customDemoData.current.icon = '01d';
-      } else if (lat === 35.6762) { // Tokyo
-        customDemoData.location = { name: 'Tokyo', country: 'JP', lat, lon };
-        customDemoData.current.temperature = 25;
-        customDemoData.current.description = 'few clouds';
-        customDemoData.current.icon = '02d';
-      } else if (lat === 48.8566) { // Paris
-        customDemoData.location = { name: 'Paris', country: 'FR', lat, lon };
-        customDemoData.current.temperature = 16;
-        customDemoData.current.description = 'light rain';
-        customDemoData.current.icon = '10d';
-      } else if (lat === -33.8688) { // Sydney
-        customDemoData.location = { name: 'Sydney', country: 'AU', lat, lon };
-        customDemoData.current.temperature = 28;
-        customDemoData.current.description = 'clear sky';
-        customDemoData.current.icon = '01d';
-      }
-      
-      return customDemoData;
-    }
+    const cacheKey = `weather_${lat}_${lon}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
 
     try {
       setLoading(true);
       setError(null);
 
-      // Get current weather and forecast
+      // Get current weather and forecast with enhanced error handling
       const [currentResponse, forecastResponse] = await Promise.all([
-        fetch(`${BASE_URL}/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`),
-        fetch(`${BASE_URL}/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`)
+        fetch(`${BASE_URL}/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`),
+        fetch(`${BASE_URL}/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`)
       ]);
 
-      if (!currentResponse.ok || !forecastResponse.ok) {
-        throw new Error('Failed to fetch weather data');
+      if (!currentResponse.ok) {
+        throw new Error(`HTTP ${currentResponse.status}: Failed to fetch current weather`);
+      }
+      
+      if (!forecastResponse.ok) {
+        throw new Error(`HTTP ${forecastResponse.status}: Failed to fetch forecast`);
       }
 
       const [currentData, forecastData] = await Promise.all([
@@ -203,25 +106,48 @@ export const useWeatherAPI = () => {
         forecastResponse.json()
       ]);
 
-      // Process forecast data (group by day and take first entry for each day)
-      const dailyForecasts = forecastData.list
-        .filter((_: any, index: number) => index % 8 === 0) // Every 8th entry (24h/3h = 8)
+      // Enhanced forecast processing - get daily data more accurately
+      const dailyMap = new Map();
+      
+      forecastData.list.forEach((item: any) => {
+        const date = item.dt_txt.split(' ')[0];
+        if (!dailyMap.has(date)) {
+          dailyMap.set(date, {
+            temps: [],
+            conditions: [],
+            humidity: [],
+            windSpeed: [],
+            precipitation: [],
+            icons: []
+          });
+        }
+        
+        const dayData = dailyMap.get(date);
+        dayData.temps.push(item.main.temp);
+        dayData.conditions.push(item.weather[0]);
+        dayData.humidity.push(item.main.humidity);
+        dayData.windSpeed.push(item.wind.speed);
+        dayData.precipitation.push(item.pop);
+        dayData.icons.push(item.weather[0].icon);
+      });
+
+      const dailyForecasts = Array.from(dailyMap.entries())
         .slice(0, 5)
-        .map((item: any) => ({
-          date: item.dt_txt.split(' ')[0],
+        .map(([date, data]: [string, any]) => ({
+          date,
           day: {
-            maxTemp: Math.round(item.main.temp_max),
-            minTemp: Math.round(item.main.temp_min),
-            condition: item.weather[0].main,
-            description: item.weather[0].description,
-            humidity: item.main.humidity,
-            windSpeed: Math.round(item.wind.speed * 3.6), // Convert m/s to km/h
-            icon: item.weather[0].icon,
-            precipitation: item.pop * 100, // Convert to percentage
+            maxTemp: Math.round(Math.max(...data.temps)),
+            minTemp: Math.round(Math.min(...data.temps)),
+            condition: data.conditions[0].main,
+            description: data.conditions[0].description,
+            humidity: Math.round(data.humidity.reduce((a: number, b: number) => a + b, 0) / data.humidity.length),
+            windSpeed: Math.round((data.windSpeed.reduce((a: number, b: number) => a + b, 0) / data.windSpeed.length) * 3.6),
+            icon: data.icons[Math.floor(data.icons.length / 2)], // Take middle icon
+            precipitation: Math.round((data.precipitation.reduce((a: number, b: number) => a + b, 0) / data.precipitation.length) * 100),
           }
         }));
 
-      return {
+      const weatherData: WeatherData = {
         location: {
           name: currentData.name,
           country: currentData.sys.country,
@@ -234,17 +160,21 @@ export const useWeatherAPI = () => {
           condition: currentData.weather[0].main,
           description: currentData.weather[0].description,
           humidity: currentData.main.humidity,
-          windSpeed: Math.round(currentData.wind.speed * 3.6), // Convert m/s to km/h
-          visibility: Math.round(currentData.visibility / 1000), // Convert to km
+          windSpeed: Math.round(currentData.wind.speed * 3.6),
+          visibility: Math.round((currentData.visibility || 10000) / 1000),
           pressure: currentData.main.pressure,
-          uvIndex: 0, // Would need UV index API
+          uvIndex: 0, // Would need separate UV API call
           icon: currentData.weather[0].icon,
         },
         forecast: dailyForecasts,
         lastUpdated: new Date().toISOString(),
       };
+
+      setCachedData(cacheKey, weatherData);
+      return weatherData;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch weather data');
+      const errorMessage = getErrorMessage(err);
+      setError(errorMessage);
       return null;
     } finally {
       setLoading(false);
@@ -265,17 +195,38 @@ export const useWeatherAPI = () => {
           const data = await getWeatherData(latitude, longitude);
           resolve(data);
         },
-        () => {
-          setError('Failed to get your location');
+        (error) => {
+          let errorMessage = 'Failed to get your location';
+          if (error.code === error.PERMISSION_DENIED) {
+            errorMessage = 'Location access denied. Please search manually or enable location permissions.';
+          } else if (error.code === error.POSITION_UNAVAILABLE) {
+            errorMessage = 'Location information unavailable. Please search manually.';
+          } else if (error.code === error.TIMEOUT) {
+            errorMessage = 'Location request timed out. Please search manually.';
+          }
+          setError(errorMessage);
           resolve(null);
+        },
+        {
+          timeout: 10000,
+          enableHighAccuracy: false,
+          maximumAge: 300000 // 5 minutes
         }
       );
     });
   }, [getWeatherData]);
 
   const hasAPIKey = useCallback(() => {
-    return !!getAPIKey();
+    return !!API_KEY;
   }, []);
+
+  // Auto-refresh functionality
+  const refreshWeatherData = useCallback(async (lat: number, lon: number): Promise<WeatherData | null> => {
+    // Clear cache for this location to force fresh data
+    const cacheKey = `weather_${lat}_${lon}`;
+    cache.delete(cacheKey);
+    return getWeatherData(lat, lon);
+  }, [getWeatherData]);
 
   return {
     loading,
@@ -283,6 +234,7 @@ export const useWeatherAPI = () => {
     searchCities,
     getWeatherData,
     getCurrentLocationWeather,
+    refreshWeatherData,
     hasAPIKey,
   };
 };

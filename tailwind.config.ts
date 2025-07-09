@@ -138,9 +138,13 @@ export default {
 				'forecast-slide': 'forecast-slide 0.5s ease-out forwards'
 			},
 			backgroundImage: {
-				'weather-gradient': 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))',
+				'weather-gradient': 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)))',
+				'premium-gradient': 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 50%, hsl(var(--primary-glow)) 100%)',
 				'sunny-gradient': 'linear-gradient(135deg, hsl(var(--sunny)), hsl(var(--sunny-glow)))',
-				'glass-gradient': 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))'
+				'glass-gradient': 'linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.1))',
+				'warm-gradient': 'linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-warm)))',
+				'card-gradient': 'linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05))',
+				'hero-gradient': 'linear-gradient(135deg, hsl(var(--primary) / 0.15), hsl(var(--accent) / 0.1), hsl(var(--primary-glow) / 0.12))'
 			}
 		}
 	},

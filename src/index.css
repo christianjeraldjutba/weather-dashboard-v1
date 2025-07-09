@@ -2,38 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Weather Dashboard Design System - Professional & Modern */
+/* Weather Dashboard Premium Design System */
 
 @layer base {
   :root {
-    /* Base colors - Sky-inspired palette */
-    --background: 220 25% 95%;
+    /* Base colors - Premium gradient system */
+    --background: 220 25% 97%;
     --foreground: 220 15% 15%;
 
-    /* Cards with glassmorphism effect */
+    /* Premium glassmorphism cards */
     --card: 220 25% 98%;
     --card-foreground: 220 15% 15%;
 
-    /* Popovers */
+    /* Enhanced popovers */
     --popover: 220 25% 98%;
     --popover-foreground: 220 15% 15%;
 
-    /* Primary - Deep sky blue */
-    --primary: 220 85% 55%;
+    /* Primary - Deep blue to purple gradient */
+    --primary: 240 85% 55%;
     --primary-foreground: 220 15% 98%;
-    --primary-glow: 220 85% 70%;
+    --primary-glow: 240 85% 70%;
+    --primary-dark: 240 85% 45%;
 
-    /* Secondary - Light sky */
-    --secondary: 220 30% 92%;
+    /* Secondary - Enhanced secondary colors */
+    --secondary: 220 30% 94%;
     --secondary-foreground: 220 20% 25%;
 
-    /* Muted tones */
-    --muted: 220 20% 90%;
-    --muted-foreground: 220 10% 45%;
+    /* Muted tones with better contrast */
+    --muted: 220 20% 92%;
+    --muted-foreground: 220 15% 45%;
 
-    /* Accent - Bright sky */
-    --accent: 200 85% 60%;
+    /* Accent - Warm orange to pink gradient */
+    --accent: 25 95% 60%;
     --accent-foreground: 220 15% 15%;
+    --accent-warm: 340 85% 65%;
 
     /* Weather condition colors */
     --sunny: 45 95% 60%;
@@ -72,34 +74,36 @@
   }
 
   .dark {
-    /* Dark mode - Night sky theme */
-    --background: 220 25% 8%;
-    --foreground: 220 15% 90%;
+    /* Dark mode - Premium night theme */
+    --background: 220 25% 6%;
+    --foreground: 220 15% 92%;
 
-    /* Dark glassmorphism cards */
-    --card: 220 20% 12%;
-    --card-foreground: 220 15% 90%;
+    /* Premium dark glassmorphism cards */
+    --card: 220 20% 10%;
+    --card-foreground: 220 15% 92%;
 
-    /* Dark popovers */
-    --popover: 220 20% 12%;
-    --popover-foreground: 220 15% 90%;
+    /* Enhanced dark popovers */
+    --popover: 220 20% 10%;
+    --popover-foreground: 220 15% 92%;
 
-    /* Primary - Bright sky blue for dark mode */
-    --primary: 200 85% 65%;
+    /* Primary - Enhanced blue-purple for dark mode */
+    --primary: 240 85% 70%;
     --primary-foreground: 220 20% 8%;
-    --primary-glow: 200 85% 80%;
+    --primary-glow: 240 85% 85%;
+    --primary-dark: 240 85% 55%;
 
-    /* Secondary - Dark sky */
-    --secondary: 220 20% 15%;
-    --secondary-foreground: 220 15% 85%;
+    /* Secondary - Premium dark */
+    --secondary: 220 20% 12%;
+    --secondary-foreground: 220 15% 88%;
 
-    /* Dark muted tones */
-    --muted: 220 15% 18%;
-    --muted-foreground: 220 10% 65%;
+    /* Enhanced dark muted tones */
+    --muted: 220 15% 15%;
+    --muted-foreground: 220 10% 70%;
 
-    /* Dark accent */
-    --accent: 200 85% 65%;
+    /* Warm accent for dark mode */
+    --accent: 25 85% 65%;
     --accent-foreground: 220 20% 8%;
+    --accent-warm: 340 75% 70%;
 
     /* Weather condition colors - dark mode variants */
     --sunny: 45 85% 65%;
@@ -135,17 +139,44 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    background-image: linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--accent) / 0.05));
+    background: linear-gradient(135deg, 
+      hsl(var(--primary) / 0.15) 0%, 
+      hsl(var(--accent) / 0.08) 50%, 
+      hsl(var(--primary-glow) / 0.12) 100%
+    );
     min-height: 100vh;
+    transition: background 0.3s ease;
   }
 
-  /* Glass morphism utilities */
+  /* Premium Glass morphism utilities */
   .glass {
-    @apply backdrop-blur-xl bg-white/10 border border-white/20;
+    @apply backdrop-blur-2xl bg-white/15 border border-white/25 shadow-2xl;
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.2), 
+      rgba(255, 255, 255, 0.05)
+    );
   }
 
   .glass-card {
-    @apply backdrop-blur-xl bg-white/20 border border-white/30 shadow-xl;
+    @apply backdrop-blur-2xl border border-white/30 shadow-2xl;
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.25), 
+      rgba(255, 255, 255, 0.1)
+    );
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.1),
+      0 0 0 1px rgba(255, 255, 255, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+
+  /* Premium gradient effects */
+  .glass-card:hover {
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.3), 
+      rgba(255, 255, 255, 0.15)
+    );
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
   }
 
   /* Weather animations */

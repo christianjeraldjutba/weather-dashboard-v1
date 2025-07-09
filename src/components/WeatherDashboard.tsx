@@ -6,20 +6,15 @@ import { CurrentWeatherCard } from './CurrentWeatherCard';
 import { ForecastCard } from './ForecastCard';
 import { LoadingSpinner } from './LoadingSpinner';
 import { ErrorMessage } from './ErrorMessage';
-import { APIKeySetup } from './APIKeySetup';
 import { toast } from '@/hooks/use-toast';
-import { Card } from '@/components/ui/card';
-import { Info, Key } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 export const WeatherDashboard = () => {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [unit, setUnit] = useState<TemperatureUnit>('celsius');
   const [recentSearches, setRecentSearches] = useState<SearchResult[]>([]);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [showAPIKeySetup, setShowAPIKeySetup] = useState(false);
   
-  const { loading, error, getWeatherData, getCurrentLocationWeather, hasAPIKey } = useWeatherAPI();
+  const { loading, error, getWeatherData, getCurrentLocationWeather, refreshWeatherData } = useWeatherAPI();
 
   // Load initial data and preferences
   useEffect(() => {
@@ -37,13 +32,35 @@ export const WeatherDashboard = () => {
       }
     }
     
-    if (savedTheme === 'dark') {
+    // Enhanced theme detection
+    const systemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const shouldUseDarkMode = savedTheme === 'dark' || (!savedTheme && systemDarkMode);
+    
+    if (shouldUseDarkMode) {
       setIsDarkMode(true);
       document.documentElement.classList.add('dark');
     }
 
-    // Load default location (user's current location or default city)
+    // Load default location
     loadDefaultLocation();
+
+    // Set up auto-refresh every 10 minutes
+    const interval = setInterval(() => {
+      if (weatherData) {
+        refreshWeatherData(weatherData.location.lat, weatherData.location.lon)
+          .then((data) => {
+            if (data) {
+              setWeatherData(data);
+              toast({
+                title: "Weather updated",
+                description: "Latest weather data loaded",
+              });
+            }
+          });
+      }
+    }, 10 * 60 * 1000); // 10 minutes
+
+    return () => clearInterval(interval);
   }, []);
 
   const loadDefaultLocation = async () => {
@@ -163,19 +180,18 @@ export const WeatherDashboard = () => {
     }
   };
 
-  const handleAPIKeySet = (apiKey: string) => {
-    setShowAPIKeySetup(false);
-    loadDefaultLocation();
-    toast({
-      title: "API Key set successfully",
-      description: "Loading real weather data...",
-    });
+  const handleRefresh = async () => {
+    if (weatherData) {
+      const data = await refreshWeatherData(weatherData.location.lat, weatherData.location.lon);
+      if (data) {
+        setWeatherData(data);
+        toast({
+          title: "Refreshed",
+          description: "Latest weather data loaded",
+        });
+      }
+    }
   };
-
-  // Show API key setup if user explicitly requests it
-  if (showAPIKeySetup) {
-    return <APIKeySetup onAPIKeySet={handleAPIKeySet} />;
-  }
 
   return (
     <div className="min-h-screen p-4">
@@ -190,32 +206,6 @@ export const WeatherDashboard = () => {
           onThemeToggle={handleThemeToggle}
         />
 
-        {/* Demo Mode Banner */}
-        {!hasAPIKey() && (
-          <Card className="glass-card border-white/30 p-4 mb-6 bg-gradient-to-r from-primary/10 to-accent/10">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Info className="h-5 w-5 text-primary" />
-                <div>
-                  <p className="font-medium">Demo Mode</p>
-                  <p className="text-sm text-muted-foreground">
-                    Showing sample weather data. Add your OpenWeatherMap API key for real data.
-                  </p>
-                </div>
-              </div>
-              <Button
-                onClick={() => setShowAPIKeySetup(true)}
-                variant="outline"
-                size="sm"
-                className="glass border-white/30"
-              >
-                <Key className="h-4 w-4 mr-2" />
-                Add API Key
-              </Button>
-            </div>
-          </Card>
-        )}
-
         <main className="space-y-8">
           {loading ? (
             <LoadingSpinner />
@@ -227,13 +217,13 @@ export const WeatherDashboard = () => {
               <ForecastCard forecast={weatherData.forecast} unit={unit} />
             </>
           ) : (
-            <LoadingSpinner message="Initializing weather dashboard..." />
+            <LoadingSpinner message="Loading weather data..." />
           )}
         </main>
 
         <footer className="mt-12 text-center text-sm text-muted-foreground">
-          <p>Weather data provided by OpenWeatherMap</p>
-          <p className="mt-1">Built with React, TypeScript, and Tailwind CSS</p>
+          <p>Weather data powered by OpenWeatherMap API</p>
+          <p className="mt-1">Professional Weather Dashboard • Real-time Data</p>
         </footer>
       </div>
     </div>
