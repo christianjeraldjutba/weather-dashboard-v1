@@ -50,7 +50,7 @@ export const CurrentWeatherCard = React.memo<CurrentWeatherCardProps>(({ data, u
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Main Weather Card */}
       <Card
-        className="lg:col-span-2 glass-card p-8 sm:p-10 weather-fade-in rounded-2xl sm:rounded-3xl relative overflow-hidden group"
+        className="lg:col-span-2 glass-card p-8 sm:p-12 weather-fade-in rounded-2xl sm:rounded-3xl relative overflow-hidden group"
         role="main"
         aria-label="Current weather information"
       >
@@ -133,7 +133,7 @@ export const CurrentWeatherCard = React.memo<CurrentWeatherCardProps>(({ data, u
         </h3>
         <div className="space-y-4" role="list">
           <div
-            className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
+            className="flex items-center justify-between p-4 rounded-xl hover:bg-gray-50/80 dark:hover:bg-slate-800/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-md"
             role="listitem"
             aria-label={`Feels like temperature: ${convertTemperature(data.current.feelsLike, unit)} degrees ${unit}`}
           >
@@ -149,7 +149,7 @@ export const CurrentWeatherCard = React.memo<CurrentWeatherCardProps>(({ data, u
           </div>
 
           <div
-            className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
+            className="flex items-center justify-between p-4 rounded-xl hover:bg-gray-50/80 dark:hover:bg-slate-800/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-md"
             role="listitem"
             aria-label={`Humidity: ${data.current.humidity} percent`}
           >
@@ -163,7 +163,7 @@ export const CurrentWeatherCard = React.memo<CurrentWeatherCardProps>(({ data, u
           </div>
 
           <div
-            className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
+            className="flex items-center justify-between p-4 rounded-xl hover:bg-gray-50/80 dark:hover:bg-slate-800/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-md"
             role="listitem"
             aria-label={`Wind speed: ${convertSpeed(data.current.windSpeed)} ${getSpeedUnit()}`}
           >
@@ -178,7 +178,7 @@ export const CurrentWeatherCard = React.memo<CurrentWeatherCardProps>(({ data, u
             </span>
           </div>
 
-          <div className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
+          <div className="flex items-center justify-between p-4 rounded-xl hover:bg-gray-50/80 dark:hover:bg-slate-800/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-md">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/30">
                 <Eye className="h-5 w-5 text-purple-600 dark:text-purple-400" />
@@ -188,7 +188,7 @@ export const CurrentWeatherCard = React.memo<CurrentWeatherCardProps>(({ data, u
             <span className="font-bold text-lg text-gray-900 dark:text-white">{data.current.visibility} km</span>
           </div>
 
-          <div className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
+          <div className="flex items-center justify-between p-4 rounded-xl hover:bg-gray-50/80 dark:hover:bg-slate-800/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-md">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-orange-100 dark:bg-orange-900/30">
                 <Gauge className="h-5 w-5 text-orange-600 dark:text-orange-400" />

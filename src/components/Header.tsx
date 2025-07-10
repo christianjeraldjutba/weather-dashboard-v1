@@ -26,17 +26,17 @@ export const Header = React.memo<HeaderProps>(({
 }) => {
   return (
     <header
-      className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border-b border-white/20 dark:border-gray-700/30 shadow-lg shadow-black/5"
+      className="sticky top-0 z-[9999] backdrop-blur-xl bg-white/85 dark:bg-slate-900/85 border-b border-slate-200/20 dark:border-slate-700/30 shadow-xl shadow-black/5"
       role="banner"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
+        <div className="flex items-center justify-between h-18 sm:h-22 py-2">
           <div className="flex items-center gap-3">
             <div className="relative" aria-hidden="true">
-              <Cloud className="h-8 w-8 sm:h-10 sm:w-10 text-blue-600 dark:text-blue-400" />
-              <div className="absolute inset-0 h-8 w-8 sm:h-10 sm:w-10 text-blue-600/30 dark:text-blue-400/30 blur-sm" />
+              <Cloud className="h-8 w-8 sm:h-10 sm:w-10 text-blue-600 drop-shadow-sm" />
+              <div className="absolute inset-0 h-8 w-8 sm:h-10 sm:w-10 text-blue-600/20 blur-sm" />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl sm:text-3xl font-bold text-blue-600 tracking-tight">
               WeatherDash
             </h1>
           </div>
@@ -60,7 +60,11 @@ export const Header = React.memo<HeaderProps>(({
                   size="sm"
                   variant={unit === 'celsius' ? 'default' : 'ghost'}
                   onClick={() => onUnitChange('celsius')}
-                  className="h-8 px-3 text-xs font-medium transition-all duration-200"
+                  className={`h-8 px-3 text-xs font-medium transition-all duration-200 ${
+                    unit === 'celsius'
+                      ? 'text-white bg-blue-600 hover:bg-blue-700'
+                      : 'text-blue-600 hover:bg-gray-200 dark:hover:bg-gray-700'
+                  }`}
                   aria-label="Switch to Celsius"
                   aria-pressed={unit === 'celsius'}
                 >
@@ -70,7 +74,11 @@ export const Header = React.memo<HeaderProps>(({
                   size="sm"
                   variant={unit === 'fahrenheit' ? 'default' : 'ghost'}
                   onClick={() => onUnitChange('fahrenheit')}
-                  className="h-8 px-3 text-xs font-medium transition-all duration-200"
+                  className={`h-8 px-3 text-xs font-medium transition-all duration-200 ${
+                    unit === 'fahrenheit'
+                      ? 'text-white bg-blue-600 hover:bg-blue-700'
+                      : 'text-blue-600 hover:bg-gray-200 dark:hover:bg-gray-700'
+                  }`}
                   aria-label="Switch to Fahrenheit"
                   aria-pressed={unit === 'fahrenheit'}
                 >
@@ -87,9 +95,9 @@ export const Header = React.memo<HeaderProps>(({
                 aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
               >
                 {isDarkMode ? (
-                  <Sun className="h-4 w-4 text-gray-700 dark:text-gray-300" aria-hidden="true" />
+                  <Sun className="h-4 w-4 text-blue-600" aria-hidden="true" />
                 ) : (
-                  <Moon className="h-4 w-4 text-gray-700 dark:text-gray-300" aria-hidden="true" />
+                  <Moon className="h-4 w-4 text-blue-600" aria-hidden="true" />
                 )}
               </Button>
             </div>

@@ -80,13 +80,13 @@ export const SearchBar = ({
   return (
     <div className={cn('relative w-full max-w-md', className)}>
       <div className="relative group">
-        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-4 w-4 transition-colors group-focus-within:text-blue-500" />
+        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 transition-colors group-focus-within:text-blue-500" />
         <Input
           type="text"
           placeholder="Search for a city..."
           value={query}
           onChange={handleInputChange}
-          className="pl-12 pr-20 h-12 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md focus:shadow-lg transition-all duration-200 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
+          className="pl-12 pr-20 h-12 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md focus:shadow-lg transition-all duration-200 text-gray-900 dark:text-white placeholder:text-muted-foreground focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
           onFocus={() => {
             if (suggestions.length > 0) setShowSuggestions(true);
           }}
@@ -116,7 +116,7 @@ export const SearchBar = ({
 
       {/* Search Suggestions */}
       {showSuggestions && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl z-50 max-h-60 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 backdrop-blur-xl rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl z-50 max-h-60 overflow-y-auto">
           {isSearching ? (
             <div className="flex items-center justify-center p-4">
               <Loader2 className="h-4 w-4 animate-spin text-blue-500" />

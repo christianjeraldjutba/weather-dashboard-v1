@@ -27,7 +27,7 @@ export const ForecastCard = React.memo<ForecastCardProps>(({ forecast, unit }) =
   };
 
   return (
-    <Card className="glass-card p-6 sm:p-8 rounded-2xl sm:rounded-3xl">
+    <Card className="glass-card p-6 sm:p-10 rounded-2xl sm:rounded-3xl">
       <h3 className="font-bold mb-6 sm:mb-8 text-xl sm:text-2xl text-gray-900 dark:text-white">
         5-Day Forecast
       </h3>
@@ -35,7 +35,7 @@ export const ForecastCard = React.memo<ForecastCardProps>(({ forecast, unit }) =
         {forecast.map((day, index) => (
           <div
             key={day.date}
-            className="flex items-center justify-between p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 animate-forecast-slide group cursor-pointer border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+            className="flex items-center justify-between p-5 rounded-xl hover:bg-gray-50/80 dark:hover:bg-slate-800/50 transition-all duration-300 animate-forecast-slide group cursor-pointer border border-gray-200/50 dark:border-slate-700/50 hover:border-gray-300 dark:hover:border-slate-600 hover:scale-[1.01] hover:shadow-lg"
             style={{ animationDelay: `${index * 0.1}s` }}
           >
             <div className="flex items-center gap-4 sm:gap-6 flex-1">
