@@ -197,19 +197,19 @@ export const WeatherDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen p-4">
-      <div className="max-w-7xl mx-auto">
-        <Header
-          onLocationSelect={handleLocationSelect}
-          onCurrentLocation={handleCurrentLocation}
-          recentSearches={recentSearches}
-          unit={unit}
-          onUnitChange={handleUnitChange}
-          isDarkMode={isDarkMode}
-          onThemeToggle={handleThemeToggle}
-        />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-300">
+      <Header
+        onLocationSelect={handleLocationSelect}
+        onCurrentLocation={handleCurrentLocation}
+        recentSearches={recentSearches}
+        unit={unit}
+        onUnitChange={handleUnitChange}
+        isDarkMode={isDarkMode}
+        onThemeToggle={handleThemeToggle}
+      />
 
-        <main className="space-y-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <main className="space-y-6 sm:space-y-8">
           {loading ? (
             <>
               <WeatherCardSkeleton />

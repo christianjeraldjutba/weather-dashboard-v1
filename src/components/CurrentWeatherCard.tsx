@@ -50,34 +50,34 @@ export const CurrentWeatherCard = React.memo<CurrentWeatherCardProps>(({ data, u
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Main Weather Card */}
       <Card
-        className="lg:col-span-2 glass-card border-white/30 p-10 weather-fade-in rounded-3xl relative overflow-hidden"
+        className="lg:col-span-2 glass-card p-8 sm:p-10 weather-fade-in rounded-2xl sm:rounded-3xl relative overflow-hidden group"
         role="main"
         aria-label="Current weather information"
       >
         {/* Dynamic weather background */}
-        <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0 opacity-10 dark:opacity-20 transition-opacity duration-300">
           <div className={`w-full h-full ${getWeatherGradient(data.current.condition)}`} />
         </div>
-        
+
         <div className="relative z-10">
           <div className="flex items-center gap-4 mb-8">
             <div className="relative" aria-hidden="true">
-              <MapPin className="h-6 w-6 text-primary drop-shadow-lg" />
-              <div className="absolute inset-0 h-6 w-6 text-primary-glow blur-sm opacity-50" />
+              <MapPin className="h-6 w-6 text-blue-600 dark:text-blue-400 drop-shadow-lg" />
+              <div className="absolute inset-0 h-6 w-6 text-blue-600/30 dark:text-blue-400/30 blur-sm opacity-50" />
             </div>
             <div>
               <h2
-                className="text-2xl font-bold bg-premium-gradient bg-clip-text text-transparent"
+                className="text-2xl font-bold text-gray-900 dark:text-white"
                 id="location-name"
               >
                 {data.location.name}, {data.location.country}
               </h2>
-              <p className="text-sm text-muted-foreground font-medium">
-                {new Date().toLocaleDateString('en-US', { 
-                  weekday: 'long', 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
+              <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                {new Date().toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
                 })}
               </p>
             </div>
@@ -94,19 +94,19 @@ export const CurrentWeatherCard = React.memo<CurrentWeatherCardProps>(({ data, u
 
             <div className="text-center lg:text-left">
               <div
-                className="text-8xl font-bold bg-weather-gradient bg-clip-text text-transparent mb-4 leading-none"
+                className="text-6xl sm:text-8xl font-bold text-gray-900 dark:text-white mb-4 leading-none"
                 aria-label={`Current temperature: ${convertTemperature(data.current.temperature, unit)} degrees ${unit}`}
               >
                 {convertTemperature(data.current.temperature, unit)}°
               </div>
               <div
-                className="text-2xl font-semibold capitalize mb-2 bg-warm-gradient bg-clip-text text-transparent"
+                className="text-xl sm:text-2xl font-semibold capitalize mb-2 text-orange-600 dark:text-orange-400"
                 aria-label={`Weather condition: ${data.current.description}`}
               >
                 {capitalizeWords(data.current.description)}
               </div>
               <div
-                className="text-lg text-muted-foreground font-medium"
+                className="text-lg text-gray-600 dark:text-gray-400 font-medium"
                 aria-label={`Feels like temperature: ${convertTemperature(data.current.feelsLike, unit)} degrees ${unit}`}
               >
                 Feels like {convertTemperature(data.current.feelsLike, unit)}{getTemperatureUnit(unit)}
@@ -121,81 +121,81 @@ export const CurrentWeatherCard = React.memo<CurrentWeatherCardProps>(({ data, u
 
       {/* Weather Details */}
       <Card
-        className="glass-card border-white/30 p-8 weather-slide-up rounded-3xl"
+        className="glass-card p-6 sm:p-8 weather-slide-up rounded-2xl sm:rounded-3xl"
         role="complementary"
         aria-labelledby="weather-details-heading"
       >
         <h3
           id="weather-details-heading"
-          className="font-bold mb-6 text-xl bg-premium-gradient bg-clip-text text-transparent"
+          className="font-bold mb-6 text-xl text-gray-900 dark:text-white"
         >
           Weather Details
         </h3>
-        <div className="space-y-6" role="list">
+        <div className="space-y-4" role="list">
           <div
-            className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors"
+            className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
             role="listitem"
             aria-label={`Feels like temperature: ${convertTemperature(data.current.feelsLike, unit)} degrees ${unit}`}
           >
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary/10" aria-hidden="true">
-                <Thermometer className="h-5 w-5 text-primary" />
+              <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30" aria-hidden="true">
+                <Thermometer className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
-              <span className="font-medium">Feels like</span>
+              <span className="font-medium text-gray-700 dark:text-gray-300">Feels like</span>
             </div>
-            <span className="font-bold text-lg">
+            <span className="font-bold text-lg text-gray-900 dark:text-white">
               {convertTemperature(data.current.feelsLike, unit)}{getTemperatureUnit(unit)}
             </span>
           </div>
 
           <div
-            className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors"
+            className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
             role="listitem"
             aria-label={`Humidity: ${data.current.humidity} percent`}
           >
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-blue-500/10" aria-hidden="true">
-                <Droplets className="h-5 w-5 text-blue-400" />
+              <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30" aria-hidden="true">
+                <Droplets className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
-              <span className="font-medium">Humidity</span>
+              <span className="font-medium text-gray-700 dark:text-gray-300">Humidity</span>
             </div>
-            <span className="font-bold text-lg">{data.current.humidity}%</span>
+            <span className="font-bold text-lg text-gray-900 dark:text-white">{data.current.humidity}%</span>
           </div>
 
           <div
-            className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors"
+            className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
             role="listitem"
             aria-label={`Wind speed: ${convertSpeed(data.current.windSpeed)} ${getSpeedUnit()}`}
           >
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-green-500/10" aria-hidden="true">
-                <Wind className="h-5 w-5 text-green-400" />
+              <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/30" aria-hidden="true">
+                <Wind className="h-5 w-5 text-green-600 dark:text-green-400" />
               </div>
-              <span className="font-medium">Wind Speed</span>
+              <span className="font-medium text-gray-700 dark:text-gray-300">Wind Speed</span>
             </div>
-            <span className="font-bold text-lg">
+            <span className="font-bold text-lg text-gray-900 dark:text-white">
               {convertSpeed(data.current.windSpeed)} {getSpeedUnit()}
             </span>
           </div>
 
-          <div className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors">
+          <div className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-purple-500/10">
-                <Eye className="h-5 w-5 text-purple-400" />
+              <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/30">
+                <Eye className="h-5 w-5 text-purple-600 dark:text-purple-400" />
               </div>
-              <span className="font-medium">Visibility</span>
+              <span className="font-medium text-gray-700 dark:text-gray-300">Visibility</span>
             </div>
-            <span className="font-bold text-lg">{data.current.visibility} km</span>
+            <span className="font-bold text-lg text-gray-900 dark:text-white">{data.current.visibility} km</span>
           </div>
 
-          <div className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors">
+          <div className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-orange-500/10">
-                <Gauge className="h-5 w-5 text-orange-400" />
+              <div className="p-2 rounded-lg bg-orange-100 dark:bg-orange-900/30">
+                <Gauge className="h-5 w-5 text-orange-600 dark:text-orange-400" />
               </div>
-              <span className="font-medium">Pressure</span>
+              <span className="font-medium text-gray-700 dark:text-gray-300">Pressure</span>
             </div>
-            <span className="font-bold text-lg">{data.current.pressure} hPa</span>
+            <span className="font-bold text-lg text-gray-900 dark:text-white">{data.current.pressure} hPa</span>
           </div>
         </div>
       </Card>

@@ -158,25 +158,35 @@
   }
 
   .glass-card {
-    @apply backdrop-blur-2xl border border-white/30 shadow-2xl;
-    background: linear-gradient(135deg, 
-      rgba(255, 255, 255, 0.25), 
-      rgba(255, 255, 255, 0.1)
-    );
-    box-shadow: 
-      0 20px 40px rgba(0, 0, 0, 0.1),
-      0 0 0 1px rgba(255, 255, 255, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    @apply backdrop-blur-xl border shadow-xl;
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow:
+      0 20px 40px rgba(0, 0, 0, 0.08),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Premium gradient effects */
+  .dark .glass-card {
+    background: rgba(17, 24, 39, 0.95);
+    border-color: rgba(75, 85, 99, 0.3);
+    box-shadow:
+      0 20px 40px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(75, 85, 99, 0.2);
+  }
+
+  /* Premium hover effects */
   .glass-card:hover {
-    background: linear-gradient(135deg, 
-      rgba(255, 255, 255, 0.3), 
-      rgba(255, 255, 255, 0.15)
-    );
-    transform: translateY(-2px);
-    transition: all 0.3s ease;
+    transform: translateY(-4px);
+    box-shadow:
+      0 32px 64px rgba(0, 0, 0, 0.12),
+      0 0 0 1px rgba(255, 255, 255, 0.15);
+  }
+
+  .dark .glass-card:hover {
+    box-shadow:
+      0 32px 64px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(75, 85, 99, 0.3);
   }
 
   /* Weather animations */
@@ -186,6 +196,21 @@
 
   .weather-slide-up {
     animation: weather-slide-up 0.5s ease-out forwards;
+  }
+
+  .animate-forecast-slide {
+    animation: forecast-slide 0.4s ease-out forwards;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Focus styles for accessibility */
+  .focus-visible:focus {
+    outline: 2px solid rgb(59 130 246);
+    outline-offset: 2px;
   }
 
   /* Custom scrollbar */
@@ -226,5 +251,16 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes forecast-slide {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

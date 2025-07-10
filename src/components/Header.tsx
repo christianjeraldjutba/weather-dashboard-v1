@@ -26,73 +26,73 @@ export const Header = React.memo<HeaderProps>(({
 }) => {
   return (
     <header
-      className="glass-card border-white/30 p-6 mb-8 rounded-2xl"
+      className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border-b border-white/20 dark:border-gray-700/30 shadow-lg shadow-black/5"
       role="banner"
     >
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           <div className="flex items-center gap-3">
             <div className="relative" aria-hidden="true">
-              <Cloud className="h-10 w-10 text-primary animate-weather-pulse" />
-              <div className="absolute inset-0 h-10 w-10 text-primary-glow animate-weather-pulse opacity-30 blur-sm" />
+              <Cloud className="h-8 w-8 sm:h-10 sm:w-10 text-blue-600 dark:text-blue-400" />
+              <div className="absolute inset-0 h-8 w-8 sm:h-10 sm:w-10 text-blue-600/30 dark:text-blue-400/30 blur-sm" />
             </div>
-            <h1 className="text-3xl font-bold bg-premium-gradient bg-clip-text text-transparent">
-              WeatherDash Pro
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+              WeatherDash
             </h1>
           </div>
-        </div>
 
-        <div className="flex items-center gap-4">
-          <SearchBar
-            onLocationSelect={onLocationSelect}
-            onCurrentLocation={onCurrentLocation}
-            recentSearches={recentSearches}
-            className="w-full sm:w-auto"
-          />
+          <div className="flex items-center gap-3 sm:gap-4">
+            <SearchBar
+              onLocationSelect={onLocationSelect}
+              onCurrentLocation={onCurrentLocation}
+              recentSearches={recentSearches}
+              className="w-full sm:w-auto"
+            />
 
-          <div className="flex items-center gap-2">
-            {/* Temperature Unit Toggle */}
-            <div
-              className="flex items-center glass border border-white/30 rounded-lg p-1"
-              role="group"
-              aria-label="Temperature unit selection"
-            >
+            <div className="flex items-center gap-2">
+              {/* Temperature Unit Toggle */}
+              <div
+                className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700"
+                role="group"
+                aria-label="Temperature unit selection"
+              >
+                <Button
+                  size="sm"
+                  variant={unit === 'celsius' ? 'default' : 'ghost'}
+                  onClick={() => onUnitChange('celsius')}
+                  className="h-8 px-3 text-xs font-medium transition-all duration-200"
+                  aria-label="Switch to Celsius"
+                  aria-pressed={unit === 'celsius'}
+                >
+                  °C
+                </Button>
+                <Button
+                  size="sm"
+                  variant={unit === 'fahrenheit' ? 'default' : 'ghost'}
+                  onClick={() => onUnitChange('fahrenheit')}
+                  className="h-8 px-3 text-xs font-medium transition-all duration-200"
+                  aria-label="Switch to Fahrenheit"
+                  aria-pressed={unit === 'fahrenheit'}
+                >
+                  °F
+                </Button>
+              </div>
+
+              {/* Theme Toggle */}
               <Button
                 size="sm"
-                variant={unit === 'celsius' ? 'default' : 'ghost'}
-                onClick={() => onUnitChange('celsius')}
-                className="h-8 px-3 text-xs"
-                aria-label="Switch to Celsius"
-                aria-pressed={unit === 'celsius'}
+                variant="ghost"
+                onClick={onThemeToggle}
+                className="h-10 w-10 p-0 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200"
+                aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
               >
-                °C
-              </Button>
-              <Button
-                size="sm"
-                variant={unit === 'fahrenheit' ? 'default' : 'ghost'}
-                onClick={() => onUnitChange('fahrenheit')}
-                className="h-8 px-3 text-xs"
-                aria-label="Switch to Fahrenheit"
-                aria-pressed={unit === 'fahrenheit'}
-              >
-                °F
+                {isDarkMode ? (
+                  <Sun className="h-4 w-4 text-gray-700 dark:text-gray-300" aria-hidden="true" />
+                ) : (
+                  <Moon className="h-4 w-4 text-gray-700 dark:text-gray-300" aria-hidden="true" />
+                )}
               </Button>
             </div>
-
-            {/* Theme Toggle */}
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={onThemeToggle}
-              className="glass border border-white/30 h-10 w-10 p-0"
-              aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
-            >
-              {isDarkMode ? (
-                <Sun className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <Moon className="h-4 w-4" aria-hidden="true" />
-              )}
-            </Button>
           </div>
         </div>
       </div>
