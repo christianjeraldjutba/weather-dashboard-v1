@@ -197,19 +197,24 @@ export const WeatherDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen p-4">
-      <div className="max-w-7xl mx-auto">
-        <Header
-          onLocationSelect={handleLocationSelect}
-          onCurrentLocation={handleCurrentLocation}
-          recentSearches={recentSearches}
-          unit={unit}
-          onUnitChange={handleUnitChange}
-          isDarkMode={isDarkMode}
-          onThemeToggle={handleThemeToggle}
-        />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-all duration-500 relative">
+      {/* Background pattern overlay */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.03),transparent_50%)] dark:bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.05),transparent_50%)]" />
 
-        <main className="space-y-8">
+      <Header
+        onLocationSelect={handleLocationSelect}
+        onCurrentLocation={handleCurrentLocation}
+        recentSearches={recentSearches}
+        unit={unit}
+        onUnitChange={handleUnitChange}
+        isDarkMode={isDarkMode}
+        onThemeToggle={handleThemeToggle}
+      />
+
+      <div className="relative z-10">
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8">
+        <main className="space-y-6 sm:space-y-8">
           {loading ? (
             <>
               <WeatherCardSkeleton />
@@ -230,10 +235,37 @@ export const WeatherDashboard = () => {
           )}
         </main>
 
-        <footer className="mt-12 text-center text-sm text-muted-foreground">
-          <p>Weather data powered by OpenWeatherMap API</p>
-          <p className="mt-1">Professional Weather Dashboard • Real-time Data</p>
+        <footer className="mt-16 text-center">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-8 max-w-lg mx-auto shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
+              <p className="text-sm text-gray-700 dark:text-gray-300 font-semibold tracking-wide">
+                Weather data powered by OpenWeatherMap API
+              </p>
+              <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
+            </div>
+            <div className="flex items-center justify-center gap-3 text-xs text-gray-500 dark:text-gray-400 font-medium">
+              <span className="flex items-center gap-1">
+                <div className="w-1 h-1 bg-blue-600 rounded-full"></div>
+                Professional Weather Dashboard
+              </span>
+              <span className="flex items-center gap-1">
+                <div className="w-1 h-1 bg-green-500 rounded-full"></div>
+                Real-time Data
+              </span>
+              <span className="flex items-center gap-1">
+                <div className="w-1 h-1 bg-purple-500 rounded-full"></div>
+                Enterprise Grade
+              </span>
+            </div>
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <p className="text-xs text-gray-400 dark:text-gray-500 font-medium">
+                © {new Date().getFullYear()} WeatherDash • All rights reserved
+              </p>
+            </div>
+          </div>
         </footer>
+      </div>
       </div>
     </div>
   );

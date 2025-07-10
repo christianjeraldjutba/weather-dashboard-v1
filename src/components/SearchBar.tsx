@@ -79,48 +79,52 @@ export const SearchBar = ({
 
   return (
     <div className={cn('relative w-full max-w-md', className)}>
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+      <div className="relative group">
+        <div className="absolute left-4 top-1/2 z-10 transform -translate-y-1/2 flex items-center pointer-events-none">
+          <Search className="h-4 w-4 text-muted-foreground" />
+        </div>
+
         <Input
           type="text"
           placeholder="Search for a city..."
           value={query}
           onChange={handleInputChange}
-          className="pl-10 pr-20 glass-card border-white/30 text-foreground placeholder:text-muted-foreground"
+          className="pl-12 pr-20 h-12 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md focus:shadow-lg transition-all duration-200 text-gray-900 dark:text-white placeholder:text-muted-foreground focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
           onFocus={() => {
             if (suggestions.length > 0) setShowSuggestions(true);
           }}
         />
-        <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
+
+        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
           {query && (
             <Button
               size="sm"
               variant="ghost"
               onClick={clearSearch}
-              className="h-6 w-6 p-0"
+              className="h-7 w-7 p-0 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             >
-              <X className="h-3 w-3" />
+              <X className="h-3 w-3 text-gray-500 dark:text-gray-400" />
             </Button>
           )}
           <Button
             size="sm"
             variant="ghost"
             onClick={onCurrentLocation}
-            className="h-6 w-6 p-0"
+            className="h-7 w-7 p-0 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             title="Use current location"
           >
-            <MapPin className="h-3 w-3" />
+            <MapPin className="h-3 w-3 text-gray-500 dark:text-gray-400" />
           </Button>
         </div>
       </div>
 
       {/* Search Suggestions */}
       {showSuggestions && (
-        <div className="absolute top-full left-0 right-0 mt-2 glass-card rounded-lg border border-white/30 shadow-lg z-50 max-h-60 overflow-y-auto custom-scrollbar">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 backdrop-blur-xl rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl z-50 max-h-60 overflow-y-auto">
           {isSearching ? (
             <div className="flex items-center justify-center p-4">
-              <Loader2 className="h-4 w-4 animate-spin text-primary" />
-              <span className="ml-2 text-sm text-muted-foreground">Searching...</span>
+              <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
+              <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">Searching...</span>
             </div>
           ) : suggestions.length > 0 ? (
             <div className="py-2">
@@ -128,33 +132,33 @@ export const SearchBar = ({
                 <button
                   key={`${location.lat}-${location.lon}-${index}`}
                   onClick={() => handleLocationSelect(location)}
-                  className="w-full px-4 py-2 text-left hover:bg-white/10 flex items-center gap-2 transition-colors"
+                  className="w-full px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 transition-all duration-150 group"
                 >
-                  <MapPin className="h-3 w-3 text-muted-foreground" />
-                  <span className="text-sm">{location.name}, {location.country}</span>
+                  <MapPin className="h-4 w-4 text-gray-400 dark:text-gray-500 group-hover:text-blue-500 transition-colors" />
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">{location.name}, {location.country}</span>
                 </button>
               ))}
             </div>
           ) : query.length >= 2 ? (
-            <div className="p-4 text-center text-sm text-muted-foreground">
+            <div className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">
               No cities found
             </div>
           ) : null}
 
           {/* Recent Searches */}
           {!query && recentSearches.length > 0 && (
-            <div className="border-t border-white/20 py-2">
-              <div className="px-4 py-2 text-xs text-muted-foreground font-medium">
+            <div className="border-t border-gray-200 dark:border-gray-700 py-2">
+              <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wide">
                 Recent Searches
               </div>
               {recentSearches.map((location, index) => (
                 <button
                   key={`recent-${location.lat}-${location.lon}-${index}`}
                   onClick={() => handleLocationSelect(location)}
-                  className="w-full px-4 py-2 text-left hover:bg-white/10 flex items-center gap-2 transition-colors"
+                  className="w-full px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 transition-all duration-150 group"
                 >
-                  <MapPin className="h-3 w-3 text-muted-foreground" />
-                  <span className="text-sm">{location.name}, {location.country}</span>
+                  <MapPin className="h-4 w-4 text-gray-400 dark:text-gray-500 group-hover:text-blue-500 transition-colors" />
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">{location.name}, {location.country}</span>
                 </button>
               ))}
             </div>
