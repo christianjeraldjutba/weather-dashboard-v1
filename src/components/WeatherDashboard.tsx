@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { WeatherData, TemperatureUnit, SearchResult } from '@/types/weather';
 import { useWeatherAPI } from '@/hooks/useWeatherAPI';
+import { weatherStorage } from '@/utils/storage';
+import { APP_CONFIG } from '@/constants/weather';
 import { Header } from './Header';
 import { CurrentWeatherCard } from './CurrentWeatherCard';
 import { ForecastCard } from './ForecastCard';
 import { LoadingSpinner } from './LoadingSpinner';
 import { ErrorMessage } from './ErrorMessage';
+import { WeatherCardSkeleton, ForecastCardSkeleton } from './SkeletonLoader';
 import { toast } from '@/hooks/use-toast';
 
 export const WeatherDashboard = () => {
@@ -208,7 +211,10 @@ export const WeatherDashboard = () => {
 
         <main className="space-y-8">
           {loading ? (
-            <LoadingSpinner />
+            <>
+              <WeatherCardSkeleton />
+              <ForecastCardSkeleton />
+            </>
           ) : error ? (
             <ErrorMessage message={error} onRetry={handleRetry} />
           ) : weatherData ? (
@@ -217,7 +223,10 @@ export const WeatherDashboard = () => {
               <ForecastCard forecast={weatherData.forecast} unit={unit} />
             </>
           ) : (
-            <LoadingSpinner message="Loading weather data..." />
+            <>
+              <WeatherCardSkeleton />
+              <ForecastCardSkeleton />
+            </>
           )}
         </main>
 

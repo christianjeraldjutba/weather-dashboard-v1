@@ -1,6 +1,8 @@
+import React from 'react';
 import { ForecastDay, TemperatureUnit } from '@/types/weather';
 import { WeatherIcon } from './WeatherIcon';
 import { Card } from '@/components/ui/card';
+import { convertTemperature, getTemperatureUnit, getDayName } from '@/utils/weather';
 import { Droplets } from 'lucide-react';
 
 interface ForecastCardProps {
@@ -8,16 +10,7 @@ interface ForecastCardProps {
   unit: TemperatureUnit;
 }
 
-export const ForecastCard = ({ forecast, unit }: ForecastCardProps) => {
-  const convertTemperature = (temp: number) => {
-    if (unit === 'fahrenheit') {
-      return Math.round((temp * 9/5) + 32);
-    }
-    return temp;
-  };
-
-  const getTemperatureUnit = () => unit === 'fahrenheit' ? '°F' : '°C';
-
+export const ForecastCard = React.memo<ForecastCardProps>(({ forecast, unit }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const today = new Date();
@@ -67,10 +60,10 @@ export const ForecastCard = ({ forecast, unit }: ForecastCardProps) => {
             </div>
             <div className="flex flex-col items-end gap-1">
               <span className="text-lg font-bold bg-warm-gradient bg-clip-text text-transparent">
-                {convertTemperature(day.day.maxTemp)}°
+                {convertTemperature(day.day.maxTemp, unit)}°
               </span>
               <span className="text-sm text-muted-foreground font-medium">
-                {convertTemperature(day.day.minTemp)}°
+                {convertTemperature(day.day.minTemp, unit)}°
               </span>
             </div>
           </div>
@@ -78,4 +71,6 @@ export const ForecastCard = ({ forecast, unit }: ForecastCardProps) => {
       </div>
     </Card>
   );
-};
+});
+
+ForecastCard.displayName = 'ForecastCard';
