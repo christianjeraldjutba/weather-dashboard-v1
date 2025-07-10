@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Cloud, Sun, Moon, Thermometer, Menu, X } from 'lucide-react';
+import { Cloud, Sun, Moon, Thermometer, Menu, X, Search, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { TemperatureUnit } from '@/types/weather';
@@ -122,59 +122,102 @@ export const Header = React.memo<HeaderProps>(({
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="h-10 w-10 p-0 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200"
+                  className="h-10 w-10 p-0 hover:bg-transparent focus:bg-transparent transition-all duration-200"
                   aria-label="Open mobile menu"
                 >
-                  <Menu className="h-5 w-5 text-blue-600" aria-hidden="true" />
+                  <Menu className="h-6 w-6 text-blue-600 hover:text-blue-700 dark:hover:text-blue-500 transition-colors duration-200" aria-hidden="true" />
                 </Button>
               </SheetTrigger>
               <SheetContent
                 side="right"
-                className="w-[300px] sm:w-[400px] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-l border-slate-200/20 dark:border-slate-700/30"
+                className="w-80 p-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-l border-gray-200/50 dark:border-gray-700/50 shadow-2xl"
               >
-                <div className="flex flex-col gap-6 pt-6">
-                  {/* Mobile Menu Header */}
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-blue-600">Menu</h2>
+                <div className="flex flex-col h-full">
+                  {/* Header */}
+                  <div className="flex items-center justify-between p-6 border-b border-gray-200/50 dark:border-gray-700/50 bg-gradient-to-r from-blue-50/50 to-indigo-50/50 dark:from-gray-800/50 dark:to-gray-900/50">
+                    <div className="flex items-center space-x-3">
+                      <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                        <Menu className="h-4 w-4 text-white" />
+                      </div>
+                      <h2 className="text-lg font-semibold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent">
+                        Menu
+                      </h2>
+                    </div>
                   </div>
 
-                  {/* Search Bar in Mobile Menu */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Search Location
-                    </label>
-                    <SearchBar
-                      onLocationSelect={(location) => {
-                        onLocationSelect(location);
-                        setIsMobileMenuOpen(false);
-                      }}
-                      onCurrentLocation={() => {
-                        onCurrentLocation();
-                        setIsMobileMenuOpen(false);
-                      }}
-                      recentSearches={recentSearches}
-                      className="w-full"
-                    />
+                  {/* Content */}
+                  <div className="flex-1 p-6 space-y-8 overflow-y-auto">
+                    {/* Search Location */}
+                    <div className="space-y-4 animate-in slide-in-from-right-4 duration-300 delay-100">
+                      <div className="flex items-center space-x-2">
+                        <div className="h-5 w-5 rounded-md bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                          <Search className="h-3 w-3 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                          Search Location
+                        </h3>
+                      </div>
+                      <div className="pl-7">
+                        <SearchBar
+                          onLocationSelect={(location) => {
+                            onLocationSelect(location);
+                            setIsMobileMenuOpen(false);
+                          }}
+                          onCurrentLocation={() => {
+                            onCurrentLocation();
+                            setIsMobileMenuOpen(false);
+                          }}
+                          recentSearches={recentSearches}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Temperature Unit */}
+                    <div className="space-y-4 animate-in slide-in-from-right-4 duration-300 delay-200">
+                      <div className="flex items-center space-x-2">
+                        <div className="h-5 w-5 rounded-md bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
+                          <Thermometer className="h-3 w-3 text-orange-600 dark:text-orange-400" />
+                        </div>
+                        <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                          Temperature Unit
+                        </h3>
+                      </div>
+                      <div className="pl-7">
+                        <TemperatureToggle />
+                      </div>
+                    </div>
+
+                    {/* Theme */}
+                    <div className="space-y-4 animate-in slide-in-from-right-4 duration-300 delay-300">
+                      <div className="flex items-center space-x-2">
+                        <div className="h-5 w-5 rounded-md bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                          <Palette className="h-3 w-3 text-purple-600 dark:text-purple-400" />
+                        </div>
+                        <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                          Theme
+                        </h3>
+                      </div>
+                      <div className="pl-7">
+                        <div className="flex items-center gap-2">
+                          <ThemeToggle />
+                          <span className="text-sm text-gray-600 dark:text-gray-400">
+                            {isDarkMode ? 'Dark Mode' : 'Light Mode'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Temperature Unit Toggle in Mobile Menu */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Temperature Unit
-                    </label>
-                    <TemperatureToggle />
-                  </div>
-
-                  {/* Theme Toggle in Mobile Menu */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Theme
-                    </label>
-                    <div className="flex items-center gap-2">
-                      <ThemeToggle />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
-                        {isDarkMode ? 'Dark Mode' : 'Light Mode'}
-                      </span>
+                  {/* Footer */}
+                  <div className="p-6 border-t border-gray-200/50 dark:border-gray-700/50 bg-gradient-to-r from-gray-50/50 to-blue-50/50 dark:from-gray-800/50 dark:to-gray-900/50">
+                    <div className="text-center">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        WeatherDash v1.0
+                      </p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                        Premium Weather Experience
+                      </p>
                     </div>
                   </div>
                 </div>

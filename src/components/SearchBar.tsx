@@ -80,6 +80,10 @@ export const SearchBar = ({
   return (
     <div className={cn('relative w-full max-w-md', className)}>
       <div className="relative group">
+        <div className="absolute left-4 top-1/2 z-10 transform -translate-y-1/2 flex items-center pointer-events-none">
+          <Search className="h-4 w-4 text-muted-foreground" />
+        </div>
+
         <Input
           type="text"
           placeholder="Search for a city..."
@@ -90,6 +94,7 @@ export const SearchBar = ({
             if (suggestions.length > 0) setShowSuggestions(true);
           }}
         />
+
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
           {query && (
             <Button
