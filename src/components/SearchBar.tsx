@@ -80,7 +80,6 @@ export const SearchBar = ({
   return (
     <div className={cn('relative w-full max-w-md', className)}>
       <div className="relative group">
-        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 transition-colors group-focus-within:text-blue-500" />
         <Input
           type="text"
           placeholder="Search for a city..."
