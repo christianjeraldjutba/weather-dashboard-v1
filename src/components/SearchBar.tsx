@@ -57,7 +57,8 @@ export const SearchBar = ({
   };
 
   const handleLocationSelect = (location: SearchResult) => {
-    setQuery(`${location.name}, ${location.country}`);
+    const displayName = `${location.name}${location.state ? `, ${location.state}` : ''}, ${location.country}`;
+    setQuery(displayName);
     setShowSuggestions(false);
     setSuggestions([]);
     onLocationSelect(location);
@@ -135,7 +136,11 @@ export const SearchBar = ({
                   className="w-full px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 transition-all duration-150 group"
                 >
                   <MapPin className="h-4 w-4 text-gray-400 dark:text-gray-500 group-hover:text-blue-500 transition-colors" />
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">{location.name}, {location.country}</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">
+                    {location.name}
+                    {location.state && `, ${location.state}`}
+                    , {location.country}
+                  </span>
                 </button>
               ))}
             </div>
@@ -158,7 +163,11 @@ export const SearchBar = ({
                   className="w-full px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 transition-all duration-150 group"
                 >
                   <MapPin className="h-4 w-4 text-gray-400 dark:text-gray-500 group-hover:text-blue-500 transition-colors" />
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">{location.name}, {location.country}</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">
+                    {location.name}
+                    {location.state && `, ${location.state}`}
+                    , {location.country}
+                  </span>
                 </button>
               ))}
             </div>

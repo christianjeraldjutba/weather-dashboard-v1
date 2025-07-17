@@ -38,6 +38,7 @@ export interface ForecastDay {
 export interface SearchResult {
   name: string;
   country: string;
+  state?: string;
   lat: number;
   lon: number;
 }
