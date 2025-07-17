@@ -22,11 +22,16 @@ export const WeatherDashboard = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   
   const { loading, error, getWeatherData, getCurrentLocationWeather, refreshWeatherData } = useWeatherAPI();
 
   // Load initial data and preferences
   useEffect(() => {
+    // Ensure sidebar is closed on initial load and set mounted state
+    setIsSidebarOpen(false);
+    setIsMounted(true);
+
     // Load saved preferences
     const savedUnit = localStorage.getItem('weather-unit') as TemperatureUnit;
     const savedSearches = localStorage.getItem('weather-recent-searches');
@@ -248,7 +253,12 @@ export const WeatherDashboard = () => {
         isDarkMode={isDarkMode}
         onThemeToggle={handleThemeToggle}
         onSearchOpen={() => setIsSearchOpen(true)}
-        onSettingsOpen={() => setIsSidebarOpen(true)}
+        onSettingsOpen={() => {
+          // Only allow opening if component is mounted
+          if (isMounted) {
+            setTimeout(() => setIsSidebarOpen(true), 50);
+          }
+        }}
       />
 
       <div className="relative z-10">
@@ -286,14 +296,16 @@ export const WeatherDashboard = () => {
         recentSearches={recentSearches}
       />
 
-      <SettingsSidebar
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-        unit={unit}
-        onUnitChange={handleUnitChange}
-        isDarkMode={isDarkMode}
-        onThemeToggle={handleThemeToggle}
-      />
+      {isMounted && !loading && (
+        <SettingsSidebar
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+          unit={unit}
+          onUnitChange={handleUnitChange}
+          isDarkMode={isDarkMode}
+          onThemeToggle={handleThemeToggle}
+        />
+      )}
     </div>
   );
 };
