@@ -1,8 +1,7 @@
 import React from 'react';
 import { ForecastDay, TemperatureUnit } from '@/types/weather';
 import { WeatherIcon } from './WeatherIcon';
-import { Card } from '@/components/ui/card';
-import { convertTemperature, getTemperatureUnit, getDayName } from '@/utils/weather';
+import { convertTemperature } from '@/utils/weather';
 import { Droplets } from 'lucide-react';
 
 interface ForecastCardProps {
@@ -27,49 +26,52 @@ export const ForecastCard = React.memo<ForecastCardProps>(({ forecast, unit }) =
   };
 
   return (
-    <Card className="glass-card p-6 sm:p-10 rounded-2xl sm:rounded-3xl">
-      <h3 className="font-bold mb-6 sm:mb-8 text-xl sm:text-2xl text-gray-900 dark:text-white">
-        5-Day Forecast
-      </h3>
-      <div className="space-y-4 sm:space-y-6">
-        {forecast.map((day, index) => (
+    <div className="space-y-4">
+      <div>
+        <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-1">
+          5-Day Forecast
+        </h2>
+        <p className="text-sm text-slate-600 dark:text-slate-400">
+          Extended weather outlook
+        </p>
+      </div>
+      <div className="space-y-2">
+        {forecast.map((day) => (
           <div
             key={day.date}
-            className="flex items-center justify-between p-5 rounded-xl hover:bg-gray-50/80 dark:hover:bg-slate-800/50 transition-all duration-300 animate-forecast-slide group cursor-pointer border border-gray-200/50 dark:border-slate-700/50 hover:border-gray-300 dark:hover:border-slate-600 hover:scale-[1.01] hover:shadow-lg"
-            style={{ animationDelay: `${index * 0.1}s` }}
+            className="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-all duration-300 group cursor-pointer border border-slate-200/50 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 hover:scale-[1.005] hover:shadow-sm"
           >
-            <div className="flex items-center gap-4 sm:gap-6 flex-1">
-              <div className="w-16 sm:w-20 text-sm font-bold text-blue-600 dark:text-blue-400">
+            <div className="flex items-center gap-3 flex-1">
+              <div className="w-12 text-xs font-semibold text-slate-700 dark:text-slate-300">
                 {formatDate(day.date)}
               </div>
               <div className="relative group-hover:scale-105 transition-transform duration-200">
-                <WeatherIcon icon={day.day.icon} size={40} />
-                <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                <WeatherIcon icon={day.day.icon} size={24} />
               </div>
               <div className="flex-1">
-                <p className="text-base font-semibold capitalize mb-1 text-gray-900 dark:text-white">
+                <p className="text-xs font-medium capitalize text-slate-900 dark:text-white">
                   {day.day.description}
                 </p>
-                <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
+                <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 mt-0.5">
                   <div className="flex items-center gap-1">
-                    <Droplets className="h-4 w-4 text-blue-500 dark:text-blue-400" />
-                    <span className="font-medium">{Math.round(day.day.precipitation)}%</span>
+                    <Droplets className="h-2.5 w-2.5 text-blue-500 dark:text-blue-400" />
+                    <span>{Math.round(day.day.precipitation)}%</span>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="flex flex-col items-end gap-1">
-              <span className="text-lg font-bold text-orange-600 dark:text-orange-400">
+            <div className="flex flex-col items-end gap-0.5">
+              <span className="text-sm font-bold text-slate-900 dark:text-white">
                 {convertTemperature(day.day.maxTemp, unit)}°
               </span>
-              <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+              <span className="text-xs text-slate-500 dark:text-slate-400">
                 {convertTemperature(day.day.minTemp, unit)}°
               </span>
             </div>
           </div>
         ))}
       </div>
-    </Card>
+    </div>
   );
 });
 

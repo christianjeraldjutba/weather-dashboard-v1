@@ -29,6 +29,7 @@ export const THEME = {
   STORAGE_KEY: 'weather-theme',
   UNIT_STORAGE_KEY: 'weather-unit',
   SEARCHES_STORAGE_KEY: 'weather-recent-searches',
+  CURRENT_LOCATION_STORAGE_KEY: 'weather-current-location',
 } as const;
 
 // Weather Condition Icons Mapping

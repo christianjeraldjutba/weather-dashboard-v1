@@ -9,6 +9,10 @@ import { ForecastCard } from './ForecastCard';
 import { LoadingSpinner } from './LoadingSpinner';
 import { ErrorMessage } from './ErrorMessage';
 import { WeatherCardSkeleton, ForecastCardSkeleton } from './SkeletonLoader';
+import { SplitLayout } from './SplitLayout';
+import { WeatherMetrics } from './WeatherMetrics';
+import { FloatingSearch } from './FloatingSearch';
+import { SettingsSidebar } from './SettingsSidebar';
 import { toast } from '@/hooks/use-toast';
 
 export const WeatherDashboard = () => {
@@ -16,6 +20,8 @@ export const WeatherDashboard = () => {
   const [unit, setUnit] = useState<TemperatureUnit>('celsius');
   const [recentSearches, setRecentSearches] = useState<SearchResult[]>([]);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const { loading, error, getWeatherData, getCurrentLocationWeather, refreshWeatherData } = useWeatherAPI();
 
@@ -67,8 +73,27 @@ export const WeatherDashboard = () => {
   }, []);
 
   const loadDefaultLocation = async () => {
+    // First, try to load saved location from localStorage
+    const savedLocation = weatherStorage.getCurrentLocation();
+    if (savedLocation) {
+      try {
+        const savedLocationData = await getWeatherData(savedLocation.lat, savedLocation.lon);
+        if (savedLocationData) {
+          setWeatherData(savedLocationData);
+          toast({
+            title: "Location restored",
+            description: `Weather loaded for ${savedLocationData.location.name}`,
+          });
+          return;
+        }
+      } catch (e) {
+        console.error('Failed to load saved location, clearing invalid data');
+        weatherStorage.clearCurrentLocation();
+      }
+    }
+
     try {
-      // Try to get user's current location first
+      // Try to get user's current location if no saved location
       const currentLocationData = await getCurrentLocationWeather();
       if (currentLocationData) {
         setWeatherData(currentLocationData);
@@ -98,7 +123,10 @@ export const WeatherDashboard = () => {
       const data = await getWeatherData(location.lat, location.lon);
       if (data) {
         setWeatherData(data);
-        
+
+        // Save current location to localStorage for persistence
+        weatherStorage.setCurrentLocation(location);
+
         // Update recent searches
         const updatedSearches = [
           location,
@@ -106,10 +134,10 @@ export const WeatherDashboard = () => {
             (search) => !(search.lat === location.lat && search.lon === location.lon)
           )
         ].slice(0, 5); // Keep only 5 recent searches
-        
+
         setRecentSearches(updatedSearches);
         localStorage.setItem('weather-recent-searches', JSON.stringify(updatedSearches));
-        
+
         toast({
           title: "Weather updated",
           description: `Showing weather for ${data.location.name}`,
@@ -129,6 +157,16 @@ export const WeatherDashboard = () => {
       const data = await getCurrentLocationWeather();
       if (data) {
         setWeatherData(data);
+
+        // Save current location to localStorage for persistence
+        const currentLocationData: SearchResult = {
+          name: data.location.name,
+          country: data.location.country,
+          lat: data.location.lat,
+          lon: data.location.lon,
+        };
+        weatherStorage.setCurrentLocation(currentLocationData);
+
         toast({
           title: "Location updated",
           description: `Weather loaded for ${data.location.name}`,
@@ -209,64 +247,53 @@ export const WeatherDashboard = () => {
         onUnitChange={handleUnitChange}
         isDarkMode={isDarkMode}
         onThemeToggle={handleThemeToggle}
+        onSearchOpen={() => setIsSearchOpen(true)}
+        onSettingsOpen={() => setIsSidebarOpen(true)}
       />
 
       <div className="relative z-10">
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8">
-        <main className="space-y-6 sm:space-y-8">
-          {loading ? (
-            <>
-              <WeatherCardSkeleton />
-              <ForecastCardSkeleton />
-            </>
-          ) : error ? (
-            <ErrorMessage message={error} onRetry={handleRetry} />
-          ) : weatherData ? (
-            <>
-              <CurrentWeatherCard data={weatherData} unit={unit} />
-              <ForecastCard forecast={weatherData.forecast} unit={unit} />
-            </>
-          ) : (
-            <>
-              <WeatherCardSkeleton />
-              <ForecastCardSkeleton />
-            </>
-          )}
-        </main>
-
-        <footer className="mt-16 text-center">
-          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-8 max-w-lg mx-auto shadow-lg hover:shadow-xl transition-all duration-300">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
-              <p className="text-sm text-gray-700 dark:text-gray-300 font-semibold tracking-wide">
-                Weather data powered by OpenWeatherMap API
-              </p>
-              <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
-            </div>
-            <div className="flex items-center justify-center gap-3 text-xs text-gray-500 dark:text-gray-400 font-medium">
-              <span className="flex items-center gap-1">
-                <div className="w-1 h-1 bg-blue-600 rounded-full"></div>
-                Professional Weather Dashboard
-              </span>
-              <span className="flex items-center gap-1">
-                <div className="w-1 h-1 bg-green-500 rounded-full"></div>
-                Real-time Data
-              </span>
-              <span className="flex items-center gap-1">
-                <div className="w-1 h-1 bg-purple-500 rounded-full"></div>
-                Enterprise Grade
-              </span>
-            </div>
-            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-              <p className="text-xs text-gray-400 dark:text-gray-500 font-medium">
-                © {new Date().getFullYear()} WeatherDash • All rights reserved
-              </p>
-            </div>
+        {loading ? (
+          <div className="flex items-center justify-center min-h-[calc(100vh-5rem)]">
+            <LoadingSpinner />
           </div>
-        </footer>
+        ) : error ? (
+          <div className="flex items-center justify-center min-h-[calc(100vh-5rem)] px-4">
+            <ErrorMessage message={error} onRetry={handleRetry} />
+          </div>
+        ) : weatherData ? (
+          <SplitLayout
+            leftPanel={<CurrentWeatherCard data={weatherData} unit={unit} />}
+            rightPanel={
+              <div className="space-y-8">
+                <WeatherMetrics data={weatherData} unit={unit} />
+                <ForecastCard forecast={weatherData.forecast} unit={unit} />
+              </div>
+            }
+          />
+        ) : (
+          <div className="flex items-center justify-center min-h-[calc(100vh-5rem)]">
+            <LoadingSpinner />
+          </div>
+        )}
       </div>
-      </div>
+
+      {/* Floating Components */}
+      <FloatingSearch
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+        onLocationSelect={handleLocationSelect}
+        onCurrentLocation={handleCurrentLocation}
+        recentSearches={recentSearches}
+      />
+
+      <SettingsSidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        unit={unit}
+        onUnitChange={handleUnitChange}
+        isDarkMode={isDarkMode}
+        onThemeToggle={handleThemeToggle}
+      />
     </div>
   );
 };

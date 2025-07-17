@@ -28,7 +28,9 @@ import {
 import { WeatherData, SearchResult } from '@/types/weather';
 import { WEATHER_API, ERROR_MESSAGES, DEFAULT_LOCATIONS } from '@/constants/weather';
 import { convertWindSpeed, convertVisibility, generateCacheKey } from '@/utils/weather';
-import { validateSearchQuery, validateCoordinates, apiRateLimiter } from '@/utils/validation';
+import { validateSearchQuery, validateCoordinates, searchRateLimiter, weatherRateLimiter } from '@/utils/validation';
+import { advancedCache, memoryCache, generateCacheKey as advancedCacheKey } from '@/utils/cache';
+import { measurePerformance } from '@/utils/performance';
 
 /**
  * API key validation
@@ -39,38 +41,7 @@ if (!API_KEY) {
   console.error('VITE_OPENWEATHER_API_KEY is not configured. Please check your .env file.');
 }
 
-/**
- * Cache for API responses
- */
-const cache = new Map<string, CacheEntry>();
 
-/**
- * Cache utility functions
- */
-const cacheUtils = {
-  get: <T>(key: string): T | null => {
-    const cached = cache.get(key);
-    if (cached && Date.now() - cached.timestamp < WEATHER_API.CACHE_DURATION) {
-      return cached.data as T;
-    }
-    return null;
-  },
-
-  set: <T>(key: string, data: T): void => {
-    cache.set(key, {
-      data,
-      timestamp: Date.now()
-    });
-  },
-
-  delete: (key: string): void => {
-    cache.delete(key);
-  },
-
-  clear: (): void => {
-    cache.clear();
-  }
-};
 
 /**
  * Enhanced error message handler
@@ -122,14 +93,25 @@ export class WeatherService {
       throw new Error(validation.error);
     }
 
-    // Rate limiting
-    if (!apiRateLimiter.isAllowed('search')) {
-      throw new Error('Too many search requests. Please wait a moment.');
+    // Enhanced rate limiting with exponential backoff
+    const rateLimitResult = searchRateLimiter.checkRequest('search');
+    if (!rateLimitResult.allowed) {
+      const waitTime = rateLimitResult.retryAfter ? Math.ceil(rateLimitResult.retryAfter / 1000) : 60;
+      throw new Error(`Too many search requests. Please wait ${waitTime} seconds.`);
     }
 
-    const cacheKey = generateCacheKey('search', query);
-    const cached = cacheUtils.get<SearchResult[]>(cacheKey);
-    if (cached) return cached;
+    // Check memory cache first
+    const memoryCacheKey = advancedCacheKey.geocoding(query);
+    const memoryResult = memoryCache.get<SearchResult[]>(memoryCacheKey);
+    if (memoryResult) return memoryResult;
+
+    // Check IndexedDB cache
+    const dbResult = await advancedCache.get<SearchResult[]>('geocoding', memoryCacheKey);
+    if (dbResult) {
+      // Store in memory cache for faster access
+      memoryCache.set(memoryCacheKey, dbResult);
+      return dbResult;
+    }
     
     try {
       const response = await fetch(
@@ -142,15 +124,20 @@ export class WeatherService {
       }
       
       const data: OpenWeatherMapGeocodingResponse[] = await response.json();
-      const results = data.map((item: OpenWeatherMapGeocodingResponse) => ({
-        name: item.name,
-        country: item.country,
-        state: item.state,
-        lat: item.lat,
-        lon: item.lon,
-      }));
-      
-      cacheUtils.set(cacheKey, results);
+      const results = await measurePerformance.measureAsync('transformGeocodingResponse', async () => {
+        return data.map((item: OpenWeatherMapGeocodingResponse) => ({
+          name: item.name,
+          country: item.country,
+          state: item.state,
+          lat: item.lat,
+          lon: item.lon,
+        }));
+      });
+
+      // Cache the results in both memory and IndexedDB
+      memoryCache.set(memoryCacheKey, results);
+      await advancedCache.set('geocoding', memoryCacheKey, results, 24 * 60 * 60 * 1000); // 24 hours
+
       return results;
     } catch (error) {
       throw new Error(getErrorMessage(error));
@@ -179,14 +166,25 @@ export class WeatherService {
       throw new Error(validation.error);
     }
 
-    // Rate limiting
-    if (!apiRateLimiter.isAllowed('weather')) {
-      throw new Error('Too many weather requests. Please wait a moment.');
+    // Enhanced rate limiting with exponential backoff
+    const rateLimitResult = weatherRateLimiter.checkRequest('weather');
+    if (!rateLimitResult.allowed) {
+      const waitTime = rateLimitResult.retryAfter ? Math.ceil(rateLimitResult.retryAfter / 1000) : 60;
+      throw new Error(`Too many weather requests. Please wait ${waitTime} seconds.`);
     }
 
-    const cacheKey = generateCacheKey('weather', lat, lon);
-    const cached = cacheUtils.get<WeatherData>(cacheKey);
-    if (cached) return cached;
+    // Check memory cache first
+    const memoryCacheKey = advancedCacheKey.weather(lat, lon);
+    const memoryResult = memoryCache.get<WeatherData>(memoryCacheKey);
+    if (memoryResult) return memoryResult;
+
+    // Check IndexedDB cache
+    const dbResult = await advancedCache.get<WeatherData>('weather', memoryCacheKey);
+    if (dbResult) {
+      // Store in memory cache for faster access
+      memoryCache.set(memoryCacheKey, dbResult);
+      return dbResult;
+    }
 
     try {
       // Get current weather and forecast with enhanced error handling
@@ -274,7 +272,9 @@ export class WeatherService {
         lastUpdated: new Date().toISOString(),
       };
 
-      cacheUtils.set(cacheKey, weatherData);
+      // Store in both memory and IndexedDB cache
+      memoryCache.set(memoryCacheKey, weatherData);
+      await advancedCache.set('weather', memoryCacheKey, weatherData);
       return weatherData;
     } catch (error) {
       throw new Error(getErrorMessage(error));
@@ -327,8 +327,9 @@ export class WeatherService {
    * Refresh weather data (clears cache and fetches fresh data)
    */
   static async refreshWeatherData(lat: number, lon: number): Promise<WeatherData> {
-    const cacheKey = generateCacheKey('weather', lat, lon);
-    cacheUtils.delete(cacheKey);
+    const cacheKey = advancedCacheKey.weather(lat, lon);
+    memoryCache.delete(cacheKey);
+    await advancedCache.delete('weather', cacheKey);
     return WeatherService.getWeatherData(lat, lon);
   }
 
@@ -350,7 +351,8 @@ export class WeatherService {
   /**
    * Clear all cached data
    */
-  static clearCache(): void {
-    cacheUtils.clear();
+  static async clearCache(): Promise<void> {
+    memoryCache.clear();
+    await advancedCache.clear();
   }
 }
