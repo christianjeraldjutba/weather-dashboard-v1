@@ -41,7 +41,7 @@ A modern, professional weather dashboard built with React, TypeScript, and Tailw
 - **TypeScript 5.5.3** - Type-safe development
 - **Tailwind CSS 3.4.11** - Utility-first styling
 - **shadcn/ui** - High-quality component library
-- **Framer Motion** - Smooth animations and transitions
+- **CSS Animations** - Smooth transitions and micro-interactions
 
 ### Build Tools & Development
 - **Vite 5.4.1** - Fast build tool and dev server

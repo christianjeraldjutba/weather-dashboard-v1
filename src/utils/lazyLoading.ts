@@ -192,13 +192,11 @@ export const bundleUtils = {
    */
   loadChartLibrary: () => import('recharts'),
   loadDateLibrary: () => import('date-fns'),
-  loadAnimationLibrary: () => import('framer-motion'),
 
   /**
    * Load utility libraries on demand
    */
   loadExportLibrary: () => import('file-saver'),
-  loadCompressionLibrary: () => import('pako'),
 };
 
 /**
