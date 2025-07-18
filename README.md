@@ -1,4 +1,4 @@
-# WeatherDash Pro 🌤️
+# WeatherDash 🌤️
 
 A modern, professional weather dashboard built with React, TypeScript, and Tailwind CSS. Features real-time weather data, 5-day forecasts, and a responsive design optimized for all devices.
 
