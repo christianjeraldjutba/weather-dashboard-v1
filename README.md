@@ -1,11 +1,37 @@
 # WeatherDash 🌤️
 
-A modern, professional weather dashboard built with React, TypeScript, and Tailwind CSS. Features real-time weather data, 5-day forecasts, and a responsive design optimized for all devices.
-
 ![WeatherDash Pro](https://img.shields.io/badge/React-18.3.3-blue?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.5.3-blue?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4.11-blue?logo=tailwindcss)
 ![Vite](https://img.shields.io/badge/Vite-5.4.1-purple?logo=vite)
+
+## 📋 Table of Contents
+- [🌤️ What is WeatherDash?](#️-what-is-weatherdash)
+- [🚀 Live Demo](#-live-demo)
+- [✨ Features](#-features)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [📦 Installation](#-installation)
+- [🏗️ Project Structure](#️-project-structure)
+- [🧪 Testing](#-testing)
+- [🚀 Build & Deployment](#-build--deployment)
+- [📱 PWA Features](#-pwa-features)
+- [🎨 Design System](#-design-system)
+- [🔧 Configuration](#-configuration)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [👨‍💻 Author](#-author)
+- [🙏 Acknowledgments](#-acknowledgments)
+
+---
+
+## 🌤️ What is WeatherDash?
+
+WeatherDash is a modern, professional weather dashboard built with React, TypeScript, and Tailwind CSS. It features real-time weather data, 5-day forecasts, and a responsive design optimized for all devices. This project demonstrates advanced frontend development skills with modern web technologies, Progressive Web App capabilities, and comprehensive weather data visualization.
+
+## 🚀 Live Demo
+[View Live Demo](https://weather-dashboard-v1.vercel.app/)
+
+---
 
 ## ✨ Features
 
@@ -30,9 +56,7 @@ A modern, professional weather dashboard built with React, TypeScript, and Tailw
 - **Error Handling** - Comprehensive error boundaries and user feedback
 - **Local Storage** - Persistent settings and search history
 
-## 🚀 Live Demo
-
-[View Live Demo](https://weather-dashboard-v1.vercel.app/)
+---
 
 ## 🛠️ Tech Stack
 
@@ -52,6 +76,8 @@ A modern, professional weather dashboard built with React, TypeScript, and Tailw
 ### APIs & Services
 - **OpenWeatherMap API** - Weather data provider
 - **Geolocation API** - Browser location services
+
+---
 
 ## 📦 Installation
 
@@ -89,8 +115,9 @@ A modern, professional weather dashboard built with React, TypeScript, and Tailw
    npm run dev
    ```
 
-## 🏗️ Project Structure
+---
 
+## 🏗️ Project Structure
 ```
 src/
 ├── components/          # React components
@@ -107,8 +134,9 @@ src/
 └── assets/             # Static assets
 ```
 
-## 🧪 Testing
+---
 
+## 🧪 Testing
 ```bash
 # Run tests
 npm run test
@@ -123,8 +151,9 @@ npm run test:coverage
 npm run test:watch
 ```
 
-## 🚀 Build & Deployment
+---
 
+## 🚀 Build & Deployment
 ```bash
 # Build for production
 npm run build
@@ -136,13 +165,16 @@ npm run preview
 npm run type-check
 ```
 
-## 📱 PWA Features
+---
 
+## 📱 PWA Features
 WeatherDash Pro is a Progressive Web App with:
 - **Offline Support** - Cached weather data when offline
 - **Install Prompt** - Add to home screen on mobile/desktop
 - **Background Sync** - Updates when connection is restored
 - **Push Notifications** - Weather alerts (optional)
+
+---
 
 ## 🎨 Design System
 
@@ -156,6 +188,8 @@ WeatherDash Pro is a Progressive Web App with:
 - **Headings**: Inter font family
 - **Body**: System font stack for optimal performance
 - **Monospace**: For data display
+
+---
 
 ## 🔧 Configuration
 
@@ -173,33 +207,37 @@ VITE_LOCATION_REQUEST_TIMEOUT= # Optional: Location timeout (ms)
 - **Caching**: 10-minute cache to optimize API usage
 - **Rate Limiting**: Built-in request throttling
 
-## 🤝 Contributing
+---
 
+## 🤝 Contributing
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+---
 
+## 📄 License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+---
 
+## 👨‍💻 Author
+
+**CJ Jutba**
+- 🌐 **Portfolio**: [https://cjjutba.com/](https://cjjutba.com/)
+- 💼 **LinkedIn**: [https://www.linkedin.com/in/cjjutba/](https://www.linkedin.com/in/cjjutba/)
+- 🐙 **GitHub**: [https://github.com/cjjutba](https://github.com/cjjutba)
+- 📧 **Email**: [hello@cjjutba.com](mailto:hello@cjjutba.com)
+
+---
+
+## 🙏 Acknowledgments
 - [OpenWeatherMap](https://openweathermap.org/) for weather data
 - [shadcn/ui](https://ui.shadcn.com/) for component library
 - [Lucide React](https://lucide.dev/) for icons
 - [Tailwind CSS](https://tailwindcss.com/) for styling
 
-## 📞 Contact
-
-Christian Jerald Jutba - [cjjutbaofficial@gmail.com](mailto:cjjutbaofficial@gmail.com)
-
-GitHub Profile: [https://github.com/christianjeraldjutba](https://github.com/christianjeraldjutba)
-
-Project Link: [https://github.com/christianjeraldjutba/weather-dashboard-v1](https://github.com/christianjeraldjutba/weather-dashboard-v1)
-
 ---
-
 ⭐ Star this repository if you found it helpful!
