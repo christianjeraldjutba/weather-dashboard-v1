@@ -29,7 +29,7 @@
 WeatherDash is a modern, professional weather dashboard built with React, TypeScript, and Tailwind CSS. It features real-time weather data, 5-day forecasts, and a responsive design optimized for all devices. This project demonstrates advanced frontend development skills with modern web technologies, Progressive Web App capabilities, and comprehensive weather data visualization.
 
 ## 🚀 Live Demo
-[View Live Demo](https://weather-dashboard-v1.vercel.app/)
+[View Live Demo](https://weather.cjjutba.com/)
 
 ---
 
